@@ -43,6 +43,7 @@ def analizar_y_alertar():
         bot.send_message(chat_id=CHAT_ID, text="🔴 Señal de VENTA detectada\n" + mensaje)
     else:
         print("Sin señal clara")
+        print(mensaje)
 
 # Ejecutar solo una vez al día o por cronjob
 analizar_y_alertar()
