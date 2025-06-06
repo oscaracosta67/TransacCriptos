@@ -4,16 +4,20 @@ import time
 from ta.momentum import RSIIndicator
 from ta.trend import EMAIndicator
 import telegram
+import asyncio
 
 # CONFIGURACIÓN
-TOKEN = 'TU_TOKEN_DE_TELEGRAM'
-CHAT_ID = 'TU_CHAT_ID'
+TOKEN = '8092811964:AAEKQkmWHcNk5l6a-YnLGhvBLHmygRD0Ji4'
+CHAT_ID = 7963173297
 SYMBOL = 'BTCUSDT'
 INTERVAL = '5m'
 LIMIT = 100
 
 # Crear bot de Telegram
 bot = telegram.Bot(token=TOKEN)
+
+async def enviar_mensaje(MesnajeEnv):
+    await bot.send_message(chat_id=CHAT_ID, text=MesnajeEnv)
 
 def get_klines(symbol, interval, limit):
     url = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit={limit}'
@@ -38,12 +42,13 @@ def analizar_y_alertar():
     mensaje = f"{SYMBOL} - Precio: {precio:.2f}\nRSI: {rsi:.2f}\nEMA5: {ema5:.2f} | EMA20: {ema20:.2f}"
 
     if rsi < 30 and ema5 > ema20:
-        bot.send_message(chat_id=CHAT_ID, text="🟢 Señal de COMPRA detectada\n" + mensaje)
+       asyncio.run(bot.send_message(chat_id=CHAT_ID, text="🟢 Señal de COMPRA detectada\n" + mensaje))
+
     elif rsi > 70 and ema5 < ema20:
-        bot.send_message(chat_id=CHAT_ID, text="🔴 Señal de VENTA detectada\n" + mensaje)
+        asyncio.run(bot.send_message(chat_id=CHAT_ID, text="🔴 Señal de VENTA detectada\n" + mensaje))
     else:
-        print("Sin señal clara")
-        print(mensaje)
+        ##print("Sin señal clara")
+        asyncio.run(bot.send_message(chat_id=CHAT_ID, text="Sin señal Clara\n"))
 
 # Ejecutar solo una vez al día o por cronjob
 analizar_y_alertar()
